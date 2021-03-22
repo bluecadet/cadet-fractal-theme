@@ -1,8 +1,22 @@
 {
   "name": "@bluecadet/cadetfrctl",
   "version": "1.0.0",
-  "description": "",
+  "description": "Adds an `a11y` panel to Fractal that runs AXE tests against the current component in the preview window.",
   "main": "index.js",
+  "contributors": [
+    {
+      "name" : "Shaun M. Baer",
+      "email" : "shaun@bluecadet.com",
+      "url" : "https://bluecadet.com"
+    }
+  ],
+  "license" : "MIT",
+  "keywords": ["fractal", "@frctl", "frctl"],
+  "homepage": "https://github.com/bluecadet/cadet-fractal-theme",
+  "bugs": {
+    "url": "https://github.com/bluecadet/cadet-fractal-theme",
+    "email" : "shaun@bluecadet.com"
+  },
   "dependencies": {
     "@frctl/mandelbrot": "^1.0.0",
     "lodash": "^4.17.21"
