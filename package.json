@@ -10,11 +10,15 @@
       "url" : "https://bluecadet.com"
     }
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bluecadet/cadet-fractal-theme"
+  },
   "license" : "MIT",
   "keywords": ["fractal", "@frctl", "frctl"],
   "homepage": "https://github.com/bluecadet/cadet-fractal-theme",
   "bugs": {
-    "url": "https://github.com/bluecadet/cadet-fractal-theme",
+    "url": "https://github.com/bluecadet/cadet-fractal-theme/issues",
     "email" : "shaun@bluecadet.com"
   },
   "dependencies": {
