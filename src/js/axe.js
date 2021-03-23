@@ -42,7 +42,7 @@
 
     let help = document.createElement('p');
     help.setAttribute('class','Axe--v-help');
-    help.innerHTML = v.help;
+    help.innerHTML = `<a href="${v.helpUrl}" target="blank" rel="noopener nofollow">${v.help}</a>`;
     additional.appendChild(help);
 
     item.appendChild(additional);
@@ -113,8 +113,13 @@
     iframeDoc.documentElement.appendChild(axeScript);
 
     window.addEventListener('message', function(event) {
+
       if ( event.data.axeResults ) {
         const res = event.data.axeResults;
+        const vSpan = document.getElementById('axe-core-version');
+        vSpan.textContent = `v${res.testEngine.version}`;
+
+        console.log(res);
         if ( res.violations.length ) {
           const violationsCount     = document.getElementById('violations-count');
           const hardViolationList   = document.getElementById('axe-violations-list-hard');
@@ -125,7 +130,7 @@
           let hardV                 = [];
           let maybeV                = [];
 
-          violationsCount.textContent = `(${res.violations.length} total)`;
+          violationsCount.textContent = `(${res.violations.length} violations)`;
 
           hardViolationGroup.classList.remove('show-group');
           hardViolationList.innerHTML = '';

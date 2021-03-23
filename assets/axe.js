@@ -1809,7 +1809,7 @@ addToUnscopables('includes');
     additional.appendChild(helpTitle);
     var help = document.createElement('p');
     help.setAttribute('class', 'Axe--v-help');
-    help.innerHTML = v.help;
+    help.innerHTML = "<a href=\"".concat(v.helpUrl, "\" target=\"blank\" rel=\"noopener nofollow\">").concat(v.help, "</a>");
     additional.appendChild(help);
     item.appendChild(additional);
     var nodesContainer = document.createElement('div');
@@ -1862,6 +1862,9 @@ addToUnscopables('includes');
     window.addEventListener('message', function (event) {
       if (event.data.axeResults) {
         var res = event.data.axeResults;
+        var vSpan = document.getElementById('axe-core-version');
+        vSpan.textContent = "v".concat(res.testEngine.version);
+        console.log(res);
 
         if (res.violations.length) {
           var violationsCount = document.getElementById('violations-count');
@@ -1872,7 +1875,7 @@ addToUnscopables('includes');
           var maybeViolationGroup = document.getElementById('axe-violations-maybe-group');
           var hardV = [];
           var maybeV = [];
-          violationsCount.textContent = "(".concat(res.violations.length, " total)");
+          violationsCount.textContent = "(".concat(res.violations.length, " violations)");
           hardViolationGroup.classList.remove('show-group');
           hardViolationList.innerHTML = '';
           noHardVGroup.classList.remove('show-group');

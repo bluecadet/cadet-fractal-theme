@@ -19,6 +19,15 @@
 .Axe {
   margin-bottom: 24px; }
 
+.Axe--header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(83, 83, 99, 0.25); }
+  .Axe--header p {
+    font-size: 12px;
+    margin-top: 12px; }
+    .Axe--header p + p {
+      margin-top: 8px; }
+
 ul.Axe--results--list li.Axe--violation--item,
 ul.Axe--results--list li.Axe--v-node-item,
 ul.Axe--v-nodes-list li.Axe--violation--item,
@@ -31,24 +40,24 @@ li.Axe--violation--item {
   background-color: #FFFFFF;
   margin-bottom: 24px; }
   li.Axe--violation--item--critical .Axe--v-title {
-    background-color: #C00015;
-    color: #fff; }
+    background-color: #F14F53;
+    color: #000; }
   li.Axe--violation--item--critical .Axe--v-title--impact {
-    color: #C00015;
-    background-color: #fff; }
+    color: #fff;
+    background-color: #000; }
   li.Axe--violation--item--serious .Axe--v-title {
-    background-color: #F07336;
-    color: #262636; }
+    background-color: #F77764;
+    color: #000; }
   li.Axe--violation--item--serious .Axe--v-title--impact {
     background-color: #fff; }
   li.Axe--violation--item--moderate .Axe--v-title {
-    background-color: #FFD563;
-    color: #262636; }
+    background-color: #FFDA74;
+    color: #000; }
   li.Axe--violation--item--moderate .Axe--v-title--impact {
     background-color: #fff; }
   li.Axe--violation--item--minor .Axe--v-title {
-    background-color: #FFF1C9;
-    color: #262636; }
+    background-color: #CCD8DB;
+    color: #000; }
   li.Axe--violation--item--minor .Axe--v-title--impact {
     background-color: #fff; }
 
@@ -67,7 +76,7 @@ li.Axe--violation--item {
   border-radius: 3px;
   margin-right: 5px;
   border: 0;
-  border: 1px solid #262636; }
+  border: 1px solid #1C1C2C; }
 
 .Axe--v-nodes-title {
   font-size: 1rem;
@@ -130,6 +139,9 @@ li.Axe--violation--item {
   .Axe--violation-group.show-group {
     display: block; }
 
+.Axe--violation-group--last {
+  padding-bottom: 100px; }
+
 .Axe--v-node-item {
   margin: 0;
   border: 1px solid rgba(83, 83, 99, 0.25); }
@@ -145,7 +157,8 @@ li.Axe--violation--item {
   position: relative;
   padding: 10px 20px 10px 26px;
   -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out; }
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 20px; }
   .Axe--violation-group--toggle .Axe--violation-group--toggle-icon, .Axe--violation-group--toggle svg {
     display: block; }
   .Axe--violation-group--toggle .Axe--violation-group--toggle-icon {
