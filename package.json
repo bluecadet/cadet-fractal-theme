@@ -1,25 +1,29 @@
 {
   "name": "@bluecadet/cadetfrctl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adds an `a11y` panel to Fractal that runs AXE tests against the current component in the preview window.",
   "main": "index.js",
   "contributors": [
     {
-      "name" : "Shaun M. Baer",
-      "email" : "shaun@bluecadet.com",
-      "url" : "https://bluecadet.com"
+      "name": "Shaun M. Baer",
+      "email": "shaun@bluecadet.com",
+      "url": "https://bluecadet.com"
     }
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bluecadet/cadet-fractal-theme"
   },
-  "license" : "MIT",
-  "keywords": ["fractal", "@frctl", "frctl"],
+  "license": "MIT",
+  "keywords": [
+    "fractal",
+    "@frctl",
+    "frctl"
+  ],
   "homepage": "https://github.com/bluecadet/cadet-fractal-theme",
   "bugs": {
     "url": "https://github.com/bluecadet/cadet-fractal-theme/issues",
-    "email" : "shaun@bluecadet.com"
+    "email": "shaun@bluecadet.com"
   },
   "dependencies": {
     "@frctl/mandelbrot": "^1.0.0",
@@ -44,12 +48,25 @@
     "@rollup/plugin-eslint": "^8.0.1",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "core-js": "^3.9.1",
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-react": "^7.23.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-flatmap": "^1.0.2",
     "gulp-rollup-each": "^3.0.2",
     "gulp-sass": "^4.1.0",
     "gulp-uglify": "^3.0.2",
-    "rollup": "^2.42.3"
+    "prettier": "^2.2.1",
+    "rollup": "^2.42.3",
+    "stylelint": "^13.12.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-declaration-block-no-ignored-properties": "^2.3.0",
+    "stylelint-high-performance-animation": "^1.5.2"
   }
 }

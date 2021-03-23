@@ -35,6 +35,11 @@
     // impact.innerHTML = `<span class="Axe--v-helper-title Axe--v-helper-title--${v.impact}">Impact:</span> <span class="Axe--v-helper-result">${v.impact}</span>`;
     // additional.appendChild(impact);
 
+    let helpTitle = document.createElement('p');
+    helpTitle.setAttribute('class','Axe--v-help-title');
+    helpTitle.textContent = 'Issue Description:';
+    additional.appendChild(helpTitle);
+
     let help = document.createElement('p');
     help.setAttribute('class','Axe--v-help');
     help.innerHTML = v.help;
@@ -71,7 +76,7 @@
 
       let summary = document.createElement('p');
       summary.setAttribute('class','Axe--v-notice Axe--v-notice--node-summary');
-      summary.innerHTML = `<span class="Axe--v-notice--title">Failure Summary:</span> <span class="Axe--v-notice--result">${n.failureSummary}</span>`;
+      summary.innerHTML = `<span class="Axe--v-notice--title">Failure Summary:</span> <span class="Axe--v-notice--result Axe--v-notice--result--failure"><p>${n.failureSummary.replace(/\n/g, "</p><p>")}</p></span>`;
       nodeItem.appendChild(summary);
 
 
@@ -84,7 +89,6 @@
 
     return item;
   }
-
 
   window.addEventListener('previewLoaded', function() {
     const iframe = document.querySelector('.Preview-resizer iframe');
@@ -99,7 +103,7 @@
       let runAxeScript = iframeDoc.createElement("script");
       runAxeScript.append(`
           axe.run((err, results) => {
-            console.log(results);
+            // console.log(results);
             window.parent.postMessage({axeResults: results});
           });
       `);
@@ -110,12 +114,12 @@
 
     window.addEventListener('message', function(event) {
       if ( event.data.axeResults ) {
-        console.log('window results', event.data);
         const res = event.data.axeResults;
         if ( res.violations.length ) {
           const violationsCount     = document.getElementById('violations-count');
           const hardViolationList   = document.getElementById('axe-violations-list-hard');
           const hardViolationGroup  = document.getElementById('axe-violations-hard-group');
+          const noHardVGroup        = document.getElementById('axe-violations-hard-group-none');
           const maybeViolationList  = document.getElementById('axe-violations-list-maybe');
           const maybeViolationGroup = document.getElementById('axe-violations-maybe-group');
           let hardV                 = [];
@@ -125,6 +129,8 @@
 
           hardViolationGroup.classList.remove('show-group');
           hardViolationList.innerHTML = '';
+
+          noHardVGroup.classList.remove('show-group');
 
           maybeViolationGroup.classList.remove('show-group');
           maybeViolationList.innerHTML = '';
@@ -143,19 +149,46 @@
             hardV.forEach(v => {
               hardViolationList.appendChild(buildViolation(v));
             });
+          } else {
+            noHardVGroup.classList.add('show-group');
           }
 
           if ( maybeV.length ) {
 
-            document.getElementById('axe-violations-maybe-group').classList.add('show-group');
+            maybeViolationGroup.classList.add('show-group');
 
             maybeV.forEach(v => {
               maybeViolationList.appendChild(buildViolation(v));
             });
+
+            const btnCount = document.getElementById('axe-hard-violations-title-count');
+            btnCount.textContent = `(${maybeV.length})`;
           }
         }
       }
     }, false);
 
+  });
+
+  document.addEventListener('click', e => {
+    console.log(e.target.className);
+    if (e.target.classList.contains('js-toggle-violations')) {
+      const btn = e.target;
+      const panel = document.getElementById(btn.getAttribute('aria-controls'));
+
+      if (btn.classList.contains('is-active')) {
+        btn.focus();
+        btn.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
+        btn.classList.remove('is-active');
+        panel.classList.remove('is-active');
+      } else {
+        btn.focus();
+        btn.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
+        btn.classList.add('is-active');
+        panel.classList.add('is-active');
+      }
+    }
   });
 })();

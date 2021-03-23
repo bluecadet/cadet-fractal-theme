@@ -72,7 +72,7 @@ gulp.task('js', () => {
               exclude: [/\/core-js\//],
             }),
             rollupResolve.nodeResolve(),
-            // rollupESLint(),
+            rollupESLint(),
           ],
         },
         {

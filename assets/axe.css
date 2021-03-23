@@ -9,9 +9,12 @@
     margin-bottom: 30px;
     text-decoration: underline;
     color: #444; }
-  .Prose.Prose--axe p.Axe--violation-group--desc {
-    margin-bottom: 30px;
-    margin-top: -10px; }
+  .Prose.Prose--axe h3.Axe--v-title {
+    margin-bottom: 0; }
+  .Prose.Prose--axe p.Axe--violation-group--desc:last-of-type {
+    margin-bottom: 30px; }
+  .Prose.Prose--axe p.Axe--violation-group--desc + p.Axe--violation-group--desc {
+    margin-top: 4px; }
 
 .Axe {
   margin-bottom: 24px; }
@@ -52,8 +55,10 @@ li.Axe--violation--item {
 .Axe--v-title,
 .Axe--v-nodes-title {
   font-weight: bold;
-  padding: 10px 20px;
-  border-bottom: 1px solid rgba(83, 83, 99, 0.25); }
+  padding: 10px 20px; }
+
+.Axe--v-nodes-title {
+  padding-bottom: 0; }
 
 .Axe--v-title--impact {
   display: inline-block;
@@ -72,8 +77,11 @@ li.Axe--violation--item {
   padding: 10px 20px;
   border-bottom: 1px solid rgba(83, 83, 99, 0.25); }
 
+.Axe--v-help-title {
+  font-weight: bold; }
+
 .Axe--v-help {
-  margin-bottom: 8px; }
+  margin-top: 8px; }
 
 .Axe--v-helper-title {
   font-weight: bold; }
@@ -112,6 +120,10 @@ li.Axe--violation--item {
     background-color: #eeeeee;
     font-weight: bold; }
 
+.Axe--v-notice--result--failure p:first-child {
+  text-decoration: underline;
+  margin-bottom: 4px; }
+
 .Axe--violation-group {
   display: none;
   margin-bottom: 50px; }
@@ -123,3 +135,35 @@ li.Axe--violation--item {
   border: 1px solid rgba(83, 83, 99, 0.25); }
   .Axe--v-node-item + .Axe--v-node-item {
     margin-top: 20px; }
+
+.Axe--violation-group--toggle {
+  color: #444;
+  border: 1px solid #444;
+  font-weight: bold;
+  font-size: inherit;
+  display: inline-block;
+  position: relative;
+  padding: 10px 20px 10px 26px;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; }
+  .Axe--violation-group--toggle .Axe--violation-group--toggle-icon, .Axe--violation-group--toggle svg {
+    display: block; }
+  .Axe--violation-group--toggle .Axe--violation-group--toggle-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    margin-top: -4px; }
+  .Axe--violation-group--toggle:hover, .Axe--violation-group--toggle:focus, .Axe--violation-group--toggle.is-active {
+    background-color: #444;
+    color: #fff; }
+  .Axe--violation-group--toggle.is-active .Axe--violation-group--toggle-icon {
+    -webkit-transform: rotate(90deg);
+            transform: rotate(90deg); }
+
+.Axe--violation-group--toggleable {
+  display: none; }
+  .Axe--violation-group--toggleable.is-active {
+    display: block; }
+
+.Axe--violation-group-title-count {
+  pointer-events: none; }

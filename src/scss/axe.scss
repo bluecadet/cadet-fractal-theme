@@ -23,9 +23,20 @@ $border-a11y-val: 1px solid #262636;
     color: #444;
   }
 
+  h3.Axe--v-title {
+    margin-bottom: 0;
+  }
+
   p.Axe--violation-group--desc {
-    margin-bottom: $lr-pad + $tb-pad;
-    margin-top: -$tb-pad;
+    // margin-top: -$tb-pad;
+
+    &:last-of-type {
+      margin-bottom: $lr-pad + $tb-pad;
+    }
+  }
+
+  p.Axe--violation-group--desc + p.Axe--violation-group--desc {
+    margin-top: 4px;
   }
 }
 
@@ -98,7 +109,10 @@ li.Axe--violation--item {
 .Axe--v-nodes-title {
   font-weight: bold;
   padding: $item-pad;
-  border-bottom: $border-val
+}
+
+.Axe--v-nodes-title {
+  padding-bottom: 0;
 }
 
 .Axe--v-title--impact {
@@ -121,8 +135,12 @@ li.Axe--violation--item {
   border-bottom: $border-val
 }
 
+.Axe--v-help-title {
+  font-weight: bold;
+}
+
 .Axe--v-help {
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 
 .Axe--v-helper-title {
@@ -165,6 +183,13 @@ li.Axe--violation--item {
   }
 }
 
+.Axe--v-notice--result--failure {
+  p:first-child {
+    text-decoration: underline;
+    margin-bottom: 4px;
+  }
+}
+
 
 .Axe--violation-group {
   display: none;
@@ -182,4 +207,53 @@ li.Axe--violation--item {
   & + & {
     margin-top: 20px;
   }
+}
+
+.Axe--violation-group--toggle {
+  // text-decoration: underline;
+  color: #444;
+  border: 1px solid #444;
+  font-weight: bold;
+  font-size: inherit;
+  display: inline-block;
+  position: relative;
+  padding: 10px 20px 10px 26px;
+  transition: all 0.2s ease-in-out;
+
+  .Axe--violation-group--toggle-icon, svg {
+    display: block;
+  }
+
+  .Axe--violation-group--toggle-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    margin-top: -4px;
+  }
+
+  &:hover,
+  &:focus,
+  &.is-active {
+    background-color: #444;
+    color: #fff;
+  }
+
+  &.is-active {
+    .Axe--violation-group--toggle-icon {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+
+.Axe--violation-group--toggleable {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+}
+
+.Axe--violation-group-title-count {
+  pointer-events: none;
 }
