@@ -95,6 +95,13 @@ li.Axe--violation--item {
 .Axe--v-helper-title {
   font-weight: bold; }
 
+.Axe--v-helper--idRef {
+  margin-top: 8px;
+  font-size: 12px; }
+  .Axe--v-helper--idRef code {
+    white-space: pre-wrap;
+    font-size: 12px; }
+
 .Axe--v-notice {
   padding: 15px 20px;
   display: -webkit-box;
@@ -127,7 +134,8 @@ li.Axe--violation--item {
     margin: 0;
     padding: 5px 10px;
     background-color: #eeeeee;
-    font-weight: bold; }
+    font-weight: bold;
+    white-space: pre-wrap; }
 
 .Axe--v-notice--result--failure p:first-child {
   text-decoration: underline;

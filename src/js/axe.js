@@ -45,6 +45,11 @@
     help.innerHTML = `<a href="${v.helpUrl}" target="blank" rel="noopener nofollow">${v.help}</a>`;
     additional.appendChild(help);
 
+    let idRef = document.createElement('p');
+    idRef.setAttribute('class','Axe--v-helper Axe--v-helper--idRef');
+    idRef.innerHTML = `<span class="Axe--v-helper-title Axe--v-helper-title--${v.id}">Violation ID:</span> <span class="Axe--v-helper-result"><code>${v.id}</code></span>`;
+    additional.appendChild(idRef);
+
     item.appendChild(additional);
 
     let nodesContainer = document.createElement('div');
@@ -127,8 +132,13 @@
           const noHardVGroup        = document.getElementById('axe-violations-hard-group-none');
           const maybeViolationList  = document.getElementById('axe-violations-list-maybe');
           const maybeViolationGroup = document.getElementById('axe-violations-maybe-group');
+          const knownViolationsEl   = document.getElementById('axe-known-violations');
+          const knownViolationList  = document.getElementById('axe-violations-list-known');
+          const knownViolationGroup = document.getElementById('axe-violations-known-group');
           let hardV                 = [];
           let maybeV                = [];
+          let knownVSrc             = [];
+          let knownV                = [];
 
           violationsCount.textContent = `(${res.violations.length} violations)`;
 
@@ -140,8 +150,17 @@
           maybeViolationGroup.classList.remove('show-group');
           maybeViolationList.innerHTML = '';
 
+          if ( knownViolationsEl ) {
+            knownViolationGroup.classList.remove('show-group');
+            knownViolationList.innerHTML = '';
+            const kvData = knownViolationsEl.getAttribute('data-known');
+            knownVSrc = kvData.split(',');
+          }
+
           res.violations.forEach(v => {
-            if ( maybeViolationIDs.includes(v.id) ) {
+            if ( knownVSrc.includes(v.id) ) {
+              knownV.push(v);
+            } else if ( maybeViolationIDs.includes(v.id) ) {
               maybeV.push(v);
             } else {
               hardV.push(v);
@@ -154,8 +173,25 @@
             hardV.forEach(v => {
               hardViolationList.appendChild(buildViolation(v));
             });
+
+            const hardCount = document.getElementById('axe-hard-violations-title-count');
+            hardCount.textContent = `(${hardV.length})`;
+
           } else {
             noHardVGroup.classList.add('show-group');
+          }
+
+          if ( knownV.length ) {
+
+            knownViolationGroup.classList.add('show-group');
+
+            knownV.forEach(v => {
+              knownViolationList.appendChild(buildViolation(v));
+            });
+
+            const knownCount = document.getElementById('axe-known-violations-title-count');
+            knownCount.textContent = `(${knownV.length})`;
+
           }
 
           if ( maybeV.length ) {
@@ -166,8 +202,8 @@
               maybeViolationList.appendChild(buildViolation(v));
             });
 
-            const btnCount = document.getElementById('axe-hard-violations-title-count');
-            btnCount.textContent = `(${maybeV.length})`;
+            const maybeCount = document.getElementById('axe-maybe-violations-title-count');
+            maybeCount.textContent = `(${maybeV.length})`;
           }
         }
       }

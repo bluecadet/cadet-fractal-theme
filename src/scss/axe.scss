@@ -161,6 +161,16 @@ li.Axe--violation--item {
   font-weight: bold;
 }
 
+.Axe--v-helper--idRef {
+  margin-top: 8px;
+  font-size: 12px;
+
+  code {
+    white-space: pre-wrap;
+    font-size: 12px;
+  }
+}
+
 
 .Axe--v-notice {
   padding: 15px $lr-pad;
@@ -194,6 +204,7 @@ li.Axe--violation--item {
     padding: 5px 10px;
     background-color: #eeeeee;
     font-weight: bold;
+    white-space: pre-wrap;
   }
 }
 

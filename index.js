@@ -64,7 +64,7 @@ module.exports = function(mandelbrot, options = {}) {
             resources: 'Resources',
             info: 'Info',
             notes: 'Notes',
-            a11y: 'A11y',
+            a11y: 'A11y'
         },
     },
     panels: [
@@ -95,5 +95,11 @@ module.exports = function(mandelbrot, options = {}) {
   const subTheme = mandelbrot(config);
   subTheme.addLoadPath(__dirname + '/views');
   subTheme.addStatic(__dirname + '/assets', '/cadetfrctl');
+
+  subTheme.on('init', function (env, app) {
+    require('./lib/filters')(subTheme, env, app);
+    // console.log(env);
+  });
+
   return subTheme
 }

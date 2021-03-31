@@ -343,23 +343,23 @@ var toInteger = function (argument) {
   return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor$1 : ceil)(argument);
 };
 
-var min$2 = Math.min;
+var min$3 = Math.min;
 
 // `ToLength` abstract operation
 // https://tc39.es/ecma262/#sec-tolength
 var toLength = function (argument) {
-  return argument > 0 ? min$2(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+  return argument > 0 ? min$3(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
 };
 
 var max$1 = Math.max;
-var min$1 = Math.min;
+var min$2 = Math.min;
 
 // Helper for a popular repeating case of the spec:
 // Let integer be ? ToInteger(index).
 // If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
 var toAbsoluteIndex = function (index, length) {
   var integer = toInteger(index);
-  return integer < 0 ? max$1(integer + length, 0) : min$1(integer, length);
+  return integer < 0 ? max$1(integer + length, 0) : min$2(integer, length);
 };
 
 // `Array.prototype.{ indexOf, includes }` methods implementation
@@ -714,7 +714,7 @@ var wellKnownSymbol = function (name) {
 
 
 
-var SPECIES$2 = wellKnownSymbol('species');
+var SPECIES$3 = wellKnownSymbol('species');
 
 var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
   // #replace needs built-in support for named groups.
@@ -778,7 +778,7 @@ var fixRegexpWellKnownSymbolLogic = function (KEY, length, exec, sham) {
       // RegExp[@@split] doesn't call the regex's exec method, but first creates
       // a new one. We need to return the patched regex when creating the new one.
       re.constructor = {};
-      re.constructor[SPECIES$2] = function () { return re; };
+      re.constructor[SPECIES$3] = function () { return re; };
       re.flags = '';
       re[SYMBOL] = /./[SYMBOL];
     }
@@ -930,7 +930,7 @@ var regexpExecAbstract = function (R, S) {
 };
 
 var max = Math.max;
-var min = Math.min;
+var min$1 = Math.min;
 
 var maybeToString = function (it) {
   return it === undefined ? it : String(it);
@@ -992,7 +992,7 @@ fixRegexpWellKnownSymbolLogic('replace', 2, function (REPLACE, nativeReplace, ma
         result = results[i];
 
         var matched = String(result[0]);
-        var position = max(min(toInteger(result.index), S.length), 0);
+        var position = max(min$1(toInteger(result.index), S.length), 0);
         var captures = [];
         // NOTE: This is equivalent to
         //   captures = result.slice(1).map(maybeToString)
@@ -1030,7 +1030,7 @@ var createProperty = function (object, key, value) {
   else object[propertyKey] = value;
 };
 
-var SPECIES$1 = wellKnownSymbol('species');
+var SPECIES$2 = wellKnownSymbol('species');
 
 // `ArraySpeciesCreate` abstract operation
 // https://tc39.es/ecma262/#sec-arrayspeciescreate
@@ -1041,13 +1041,13 @@ var arraySpeciesCreate = function (originalArray, length) {
     // cross-realm fallback
     if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
     else if (isObject(C)) {
-      C = C[SPECIES$1];
+      C = C[SPECIES$2];
       if (C === null) C = undefined;
     }
   } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
 };
 
-var SPECIES = wellKnownSymbol('species');
+var SPECIES$1 = wellKnownSymbol('species');
 
 var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
   // We can't use this feature detection in V8 since it causes
@@ -1056,7 +1056,7 @@ var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
   return engineV8Version >= 51 || !fails(function () {
     var array = [];
     var constructor = array.constructor = {};
-    constructor[SPECIES] = function () {
+    constructor[SPECIES$1] = function () {
       return { foo: 1 };
     };
     return array[METHOD_NAME](Boolean).foo !== 1;
@@ -1743,6 +1743,150 @@ for (var COLLECTION_NAME in domIterables) {
   }
 }
 
+var MATCH$1 = wellKnownSymbol('match');
+
+// `IsRegExp` abstract operation
+// https://tc39.es/ecma262/#sec-isregexp
+var isRegexp = function (it) {
+  var isRegExp;
+  return isObject(it) && ((isRegExp = it[MATCH$1]) !== undefined ? !!isRegExp : classofRaw(it) == 'RegExp');
+};
+
+var SPECIES = wellKnownSymbol('species');
+
+// `SpeciesConstructor` abstract operation
+// https://tc39.es/ecma262/#sec-speciesconstructor
+var speciesConstructor = function (O, defaultConstructor) {
+  var C = anObject(O).constructor;
+  var S;
+  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? defaultConstructor : aFunction(S);
+};
+
+var arrayPush = [].push;
+var min = Math.min;
+var MAX_UINT32 = 0xFFFFFFFF;
+
+// babel-minify transpiles RegExp('x', 'y') -> /x/y and it causes SyntaxError
+var SUPPORTS_Y = !fails(function () { return !RegExp(MAX_UINT32, 'y'); });
+
+// @@split logic
+fixRegexpWellKnownSymbolLogic('split', 2, function (SPLIT, nativeSplit, maybeCallNative) {
+  var internalSplit;
+  if (
+    'abbc'.split(/(b)*/)[1] == 'c' ||
+    // eslint-disable-next-line regexp/no-empty-group -- required for testing
+    'test'.split(/(?:)/, -1).length != 4 ||
+    'ab'.split(/(?:ab)*/).length != 2 ||
+    '.'.split(/(.?)(.?)/).length != 4 ||
+    // eslint-disable-next-line regexp/no-assertion-capturing-group, regexp/no-empty-group -- required for testing
+    '.'.split(/()()/).length > 1 ||
+    ''.split(/.?/).length
+  ) {
+    // based on es5-shim implementation, need to rework it
+    internalSplit = function (separator, limit) {
+      var string = String(requireObjectCoercible(this));
+      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      if (lim === 0) return [];
+      if (separator === undefined) return [string];
+      // If `separator` is not a regex, use native split
+      if (!isRegexp(separator)) {
+        return nativeSplit.call(string, separator, lim);
+      }
+      var output = [];
+      var flags = (separator.ignoreCase ? 'i' : '') +
+                  (separator.multiline ? 'm' : '') +
+                  (separator.unicode ? 'u' : '') +
+                  (separator.sticky ? 'y' : '');
+      var lastLastIndex = 0;
+      // Make `global` and avoid `lastIndex` issues by working with a copy
+      var separatorCopy = new RegExp(separator.source, flags + 'g');
+      var match, lastIndex, lastLength;
+      while (match = regexpExec.call(separatorCopy, string)) {
+        lastIndex = separatorCopy.lastIndex;
+        if (lastIndex > lastLastIndex) {
+          output.push(string.slice(lastLastIndex, match.index));
+          if (match.length > 1 && match.index < string.length) arrayPush.apply(output, match.slice(1));
+          lastLength = match[0].length;
+          lastLastIndex = lastIndex;
+          if (output.length >= lim) break;
+        }
+        if (separatorCopy.lastIndex === match.index) separatorCopy.lastIndex++; // Avoid an infinite loop
+      }
+      if (lastLastIndex === string.length) {
+        if (lastLength || !separatorCopy.test('')) output.push('');
+      } else output.push(string.slice(lastLastIndex));
+      return output.length > lim ? output.slice(0, lim) : output;
+    };
+  // Chakra, V8
+  } else if ('0'.split(undefined, 0).length) {
+    internalSplit = function (separator, limit) {
+      return separator === undefined && limit === 0 ? [] : nativeSplit.call(this, separator, limit);
+    };
+  } else internalSplit = nativeSplit;
+
+  return [
+    // `String.prototype.split` method
+    // https://tc39.es/ecma262/#sec-string.prototype.split
+    function split(separator, limit) {
+      var O = requireObjectCoercible(this);
+      var splitter = separator == undefined ? undefined : separator[SPLIT];
+      return splitter !== undefined
+        ? splitter.call(separator, O, limit)
+        : internalSplit.call(String(O), separator, limit);
+    },
+    // `RegExp.prototype[@@split]` method
+    // https://tc39.es/ecma262/#sec-regexp.prototype-@@split
+    //
+    // NOTE: This cannot be properly polyfilled in engines that don't support
+    // the 'y' flag.
+    function (regexp, limit) {
+      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== nativeSplit);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var C = speciesConstructor(rx, RegExp);
+
+      var unicodeMatching = rx.unicode;
+      var flags = (rx.ignoreCase ? 'i' : '') +
+                  (rx.multiline ? 'm' : '') +
+                  (rx.unicode ? 'u' : '') +
+                  (SUPPORTS_Y ? 'y' : 'g');
+
+      // ^(? + rx + ) is needed, in combination with some S slicing, to
+      // simulate the 'y' flag.
+      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
+      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
+      if (lim === 0) return [];
+      if (S.length === 0) return regexpExecAbstract(splitter, S) === null ? [S] : [];
+      var p = 0;
+      var q = 0;
+      var A = [];
+      while (q < S.length) {
+        splitter.lastIndex = SUPPORTS_Y ? q : 0;
+        var z = regexpExecAbstract(splitter, SUPPORTS_Y ? S : S.slice(q));
+        var e;
+        if (
+          z === null ||
+          (e = min(toLength(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
+        ) {
+          q = advanceStringIndex(S, q, unicodeMatching);
+        } else {
+          A.push(S.slice(p, q));
+          if (A.length === lim) return A;
+          for (var i = 1; i <= z.length - 1; i++) {
+            A.push(z[i]);
+            if (A.length === lim) return A;
+          }
+          q = p = e;
+        }
+      }
+      A.push(S.slice(p));
+      return A;
+    }
+  ];
+}, !SUPPORTS_Y);
+
 var UNSCOPABLES = wellKnownSymbol('unscopables');
 var ArrayPrototype = Array.prototype;
 
@@ -1773,6 +1917,35 @@ _export({ target: 'Array', proto: true }, {
 
 // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
 addToUnscopables('includes');
+
+var notARegexp = function (it) {
+  if (isRegexp(it)) {
+    throw TypeError("The method doesn't accept regular expressions");
+  } return it;
+};
+
+var MATCH = wellKnownSymbol('match');
+
+var correctIsRegexpLogic = function (METHOD_NAME) {
+  var regexp = /./;
+  try {
+    '/./'[METHOD_NAME](regexp);
+  } catch (error1) {
+    try {
+      regexp[MATCH] = false;
+      return '/./'[METHOD_NAME](regexp);
+    } catch (error2) { /* empty */ }
+  } return false;
+};
+
+// `String.prototype.includes` method
+// https://tc39.es/ecma262/#sec-string.prototype.includes
+_export({ target: 'String', proto: true, forced: !correctIsRegexpLogic('includes') }, {
+  includes: function includes(searchString /* , position = 0 */) {
+    return !!~String(requireObjectCoercible(this))
+      .indexOf(notARegexp(searchString), arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
 
 (function () {
   var maybeViolationIDs = ["landmark-one-main", "page-has-heading-one", "region"];
@@ -1811,6 +1984,10 @@ addToUnscopables('includes');
     help.setAttribute('class', 'Axe--v-help');
     help.innerHTML = "<a href=\"".concat(v.helpUrl, "\" target=\"blank\" rel=\"noopener nofollow\">").concat(v.help, "</a>");
     additional.appendChild(help);
+    var idRef = document.createElement('p');
+    idRef.setAttribute('class', 'Axe--v-helper Axe--v-helper--idRef');
+    idRef.innerHTML = "<span class=\"Axe--v-helper-title Axe--v-helper-title--".concat(v.id, "\">Violation ID:</span> <span class=\"Axe--v-helper-result\"><code>").concat(v.id, "</code></span>");
+    additional.appendChild(idRef);
     item.appendChild(additional);
     var nodesContainer = document.createElement('div');
     nodesContainer.setAttribute('class', 'Axe--v-nodes-container');
@@ -1873,16 +2050,31 @@ addToUnscopables('includes');
           var noHardVGroup = document.getElementById('axe-violations-hard-group-none');
           var maybeViolationList = document.getElementById('axe-violations-list-maybe');
           var maybeViolationGroup = document.getElementById('axe-violations-maybe-group');
+          var knownViolationsEl = document.getElementById('axe-known-violations');
+          var knownViolationList = document.getElementById('axe-violations-list-known');
+          var knownViolationGroup = document.getElementById('axe-violations-known-group');
           var hardV = [];
           var maybeV = [];
+          var knownVSrc = [];
+          var knownV = [];
           violationsCount.textContent = "(".concat(res.violations.length, " violations)");
           hardViolationGroup.classList.remove('show-group');
           hardViolationList.innerHTML = '';
           noHardVGroup.classList.remove('show-group');
           maybeViolationGroup.classList.remove('show-group');
           maybeViolationList.innerHTML = '';
+
+          if (knownViolationsEl) {
+            knownViolationGroup.classList.remove('show-group');
+            knownViolationList.innerHTML = '';
+            var kvData = knownViolationsEl.getAttribute('data-known');
+            knownVSrc = kvData.split(',');
+          }
+
           res.violations.forEach(function (v) {
-            if (maybeViolationIDs.includes(v.id)) {
+            if (knownVSrc.includes(v.id)) {
+              knownV.push(v);
+            } else if (maybeViolationIDs.includes(v.id)) {
               maybeV.push(v);
             } else {
               hardV.push(v);
@@ -1894,8 +2086,19 @@ addToUnscopables('includes');
             hardV.forEach(function (v) {
               hardViolationList.appendChild(buildViolation(v));
             });
+            var hardCount = document.getElementById('axe-hard-violations-title-count');
+            hardCount.textContent = "(".concat(hardV.length, ")");
           } else {
             noHardVGroup.classList.add('show-group');
+          }
+
+          if (knownV.length) {
+            knownViolationGroup.classList.add('show-group');
+            knownV.forEach(function (v) {
+              knownViolationList.appendChild(buildViolation(v));
+            });
+            var knownCount = document.getElementById('axe-known-violations-title-count');
+            knownCount.textContent = "(".concat(knownV.length, ")");
           }
 
           if (maybeV.length) {
@@ -1903,8 +2106,8 @@ addToUnscopables('includes');
             maybeV.forEach(function (v) {
               maybeViolationList.appendChild(buildViolation(v));
             });
-            var btnCount = document.getElementById('axe-hard-violations-title-count');
-            btnCount.textContent = "(".concat(maybeV.length, ")");
+            var maybeCount = document.getElementById('axe-maybe-violations-title-count');
+            maybeCount.textContent = "(".concat(maybeV.length, ")");
           }
         }
       }

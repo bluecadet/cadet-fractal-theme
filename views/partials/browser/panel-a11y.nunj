@@ -1,6 +1,10 @@
 <div class="Browser-panel Browser-a11y" data-role="tab-panel" id="browser-{{ entity.id }}-panel-a11y">
   <div class="Prose Prose--axe">
     <div id="axe-content" class="Axe">
+      {% set knownViolations = getKnownViolations() %}
+      {% if knownViolations %}
+        <div id="axe-known-violations" data-known={{ knownViolations }}></div>
+      {% endif %}
       <div class="Axe--header">
         <h1 class="Axe--header--title">Axe Accessibility Test Results <span id="violations-count"></span></h1>
         <p>Tested with <a href="https://github.com/dequelabs/axe-core" target="blank" rel="nofollow">axe-core</a> <span id="axe-core-version"></span></p>
@@ -8,19 +12,47 @@
       </div>
       <div id="axe-violations" class="Axe--results">
         <div id="axe-violations-hard-group" class="Axe--violation-group">
-          <h2 id="axe-hard-violations-title" class="Axe--violation-group--title">Component Violations</h2>
-          <ul id="axe-violations-list-hard" aria-labelledby="axe-hard-violations-title" class="Axe--results--list">
-          </ul>
+          <h2 id="axe-hard-violations-title" class="Axe--violation-group--title">Component Violations <span id="axe-hard-violations-title-count" class="Axe--violation-group-title-count"></span></h2>
+          <button class="js-toggle-violations Axe--violation-group--toggle is-active" aria-label="Component Violations" aria-expanded="false" aria-controls="axe-violations-hard-group-content">
+            <span class="Axe--violation-group--toggle-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 160 160">
+                <path d="M88 80l-48 48 16 16 64-64-64-64-16 16 48 48z"/>
+              </svg>
+            </span>
+            Violations
+          </button>
+          <div id="axe-violations-hard-group-content" class="Axe--violation-group--toggleable is-active" aria-hidden="true">
+            <ul id="axe-violations-list-hard" aria-labelledby="axe-hard-violations-title" class="Axe--results--list">
+            </ul>
+          </div>
         </div>
         <div id="axe-violations-hard-group-none" class="Axe--violation-group">
           <h2 id="axe-hard-violations-title" class="Axe--violation-group--title">Component Violations</h2>
           <p>No violations found 🎉</p>
         </div>
+        {% if knownViolations %}
+          <div id="axe-violations-known-group" class="Axe--violation-group Axe--violation-group">
+            <h2 id="axe-hard-violations-title" class="Axe--violation-group--title">Known Violations <span id="axe-known-violations-title-count" class="Axe--violation-group-title-count"></span></h2>
+            <p class="Axe--violation-group--desc">These violations are flagged in the config file, and are not applicable to the context of the component.</p>
+            <button class="js-toggle-violations Axe--violation-group--toggle" aria-label="Known Violations" aria-expanded="false" aria-controls="axe-violations-known-group-content">
+              <span class="Axe--violation-group--toggle-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 160 160">
+                  <path d="M88 80l-48 48 16 16 64-64-64-64-16 16 48 48z"/>
+                </svg>
+              </span>
+              Violations
+            </button>
+            <div id="axe-violations-known-group-content" class="Axe--violation-group--toggleable" aria-hidden="true">
+              <ul id="axe-violations-list-known" aria-labelledby="axe-violations-title" class="Axe--results--list">
+              </ul>
+            </div>
+          </div>
+        {% endif %}
         <div id="axe-violations-maybe-group" class="Axe--violation-group Axe--violation-group--last">
-          <h2 id="axe-hard-violations-title" class="Axe--violation-group--title">Potential Violations <span id="axe-hard-violations-title-count" class="Axe--violation-group-title-count"></span></h2>
+          <h2 id="axe-hard-violations-title" class="Axe--violation-group--title">Potential Violations <span id="axe-maybe-violations-title-count" class="Axe--violation-group-title-count"></span></h2>
           <p class="Axe--violation-group--desc"><i>Due to the nature of Fractal, components typically exist outside of a standard, semantic web page context. As such, these violations more than likely are irrelevant within a 'partial' context.</i></p>
           <p class="Axe--violation-group--desc"><i><strong>If this component is intended to be a 'complete layout', make sure to take these violations into consideration.</strong></i></p>
-          <button class="js-toggle-violations Axe--violation-group--toggle" aria-label="Violations" aria-expanded="false" aria-controls="axe-violations-maybe-group-content">
+          <button class="js-toggle-violations Axe--violation-group--toggle" aria-label="Potential Violations" aria-expanded="false" aria-controls="axe-violations-maybe-group-content">
             <span class="Axe--violation-group--toggle-icon" aria-hidden="true">
               <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 160 160">
                 <path d="M88 80l-48 48 16 16 64-64-64-64-16 16 48 48z"/>
