@@ -124,7 +124,7 @@
         const vSpan = document.getElementById('axe-core-version');
         vSpan.textContent = `v${res.testEngine.version}`;
 
-        console.log(res);
+        // console.log(res);
         if ( res.violations.length ) {
           const violationsCount     = document.getElementById('violations-count');
           const hardViolationList   = document.getElementById('axe-violations-list-hard');
@@ -212,7 +212,7 @@
   });
 
   document.addEventListener('click', e => {
-    console.log(e.target.className);
+    // console.log(e.target.className);
     if (e.target.classList.contains('js-toggle-violations')) {
       const btn = e.target;
       const panel = document.getElementById(btn.getAttribute('aria-controls'));

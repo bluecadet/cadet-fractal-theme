@@ -1,6 +1,6 @@
 {
   "name": "@bluecadet/cadetfrctl",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Adds an `a11y` panel to Fractal that runs AXE tests against the current component in the preview window.",
   "main": "index.js",
   "contributors": [
